@@ -1,8 +1,8 @@
-import { CommentDao } from './commentDao';
-import { likeDao } from './LikeDao';
+import { CommentDao } from './Dao/commentDao';
+import { likeDao } from './Dao/LikeDao';
 import { InmemoryStore } from './memoryDb';
-import { PostDao } from './PostDao';
-import { UserDeo } from './userDao';
+import { PostDao } from './Dao/PostDao';
+import { UserDeo } from './Dao/userDao';
 
 export interface dataStore extends UserDeo,PostDao,CommentDao,likeDao{};
 

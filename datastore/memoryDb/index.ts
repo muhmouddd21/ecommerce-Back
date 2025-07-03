@@ -7,46 +7,52 @@ export class InmemoryStore implements dataStore{
     private comments:Comment[]=[];
     private likes:Like[]=[];
 
-    createUser(user: User): void {
+    createUser(user: User): Promise<void> {
        this.users.push(user);
+       return Promise.resolve();
     }
-    getUserByEmail(email: String): User | undefined {
-        return this.users.find(u => u.email === email);
+    getUserByEmail(email: String): Promise<User | undefined> {
+        return Promise.resolve(this.users.find(u => u.email === email))
     }
-    getUserByUsername(username: String): User | undefined {
-        return this.users.find(u => u.username === username);
+    getUserByUsername(username: String): Promise<User | undefined> {
+        return Promise.resolve(this.users.find(u => u.username === username))
     }
-    listPosts(): Post[] {
-        return this.posts;
+    listPosts(): Promise<Post[]> {
+        return Promise.resolve(this.posts)
     }
-    createPost(post: Post): void {
+    createPost(post: Post): Promise<void> {
         this.posts.push(post);
+        return Promise.resolve();
     }
-    getPost(id: String): Post | undefined {
-        return this.posts.find(p => p.id === id);
+    getPost(id: String): Promise<Post | undefined> {
+        return Promise.resolve(this.posts.find(p => p.id === id)) ;
     }
-    deletePost(id: String): void {
+    deletePost(id: String): Promise<void> {
         const index = this.posts.findIndex(p=> p.id === id);
         if(index === -1){
-            return;
+            return Promise.resolve();
         }
         this.posts.splice(index,1);
+        return Promise.resolve();
     }
-    createComment(comment: Comment): void {
+    createComment(comment: Comment): Promise<void> {
         this.comments.push(comment);
+        return Promise.resolve();
     }
-    listComment(postId: String): Comment[] {
-        return this.comments.filter(c => c.postId =postId);
+    listComment(postId: String): Promise<Comment[]> {
+        return Promise.resolve(this.comments.filter(c => c.postId =postId));
     }
-    deleteComment(id: String): void {
+    deleteComment(id: String): Promise<void> {
         const index = this.comments.findIndex(c=> c.id === id);
          if(index === -1){
-            return;
+               return Promise.resolve();
         }
         this.comments.splice(index,1)
+        return Promise.resolve();
     }
-    createLike(like: Like): void {
+    createLike(like: Like): Promise<void> {
         this.likes.push(like);
+        return Promise.resolve();
     }
     
 }

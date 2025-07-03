@@ -18,12 +18,14 @@ export type StrictExpressHandler<req, res> = RequestHandler<
 
 type PostRequired = Pick<Post,'title'|'url'|'userId'>;
 
-export const listposts:ExpressHandler<{},PostRequired[]> = (_request,response)=>{
+export const listposts:ExpressHandler<{},{posts: PostRequired[]}> = async(_request,response)=>{
 
-     const posts = DB.listPosts();
-      response.send(posts);
+     const posts = await DB.listPosts();
+      response.send({
+        posts:posts
+      });
 }
-export const createPost:StrictExpressHandler<PostRequired,{}> = (request,response)=>{
+export const createPost:StrictExpressHandler<PostRequired,{}> = async(request,response)=>{
 
     if (!request.body.title || !request.body.url || !request.body.userId) {
      response.status(400).send({ error: 'Missing fields' });
@@ -37,7 +39,7 @@ export const createPost:StrictExpressHandler<PostRequired,{}> = (request,respons
         userId:request.body.userId
     }
 
-    DB.createPost(post);
+    await DB.createPost(post);
     response.sendStatus(200);
 
 }
