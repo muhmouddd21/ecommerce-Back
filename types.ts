@@ -1,10 +1,18 @@
+import { RequestHandler } from "express";
+
+export type ExpressHandler<req,res>=RequestHandler<
+string,
+Partial<res>,
+Partial<req>,
+any>;
 export interface User{
-    id:String,
+    id:string,
     email:String,
     username:String,
     firstName:String,
     lastName:String,
-    password:String
+    password:string,
+    login?:String,
 }
 export interface Post{
     id:String,
@@ -24,3 +32,7 @@ export interface Comment{
     comment:String,
     postedAt:number
 }
+export interface jwtObject{
+    userId:string
+}
+export type withError<T> = T & {error: string};
