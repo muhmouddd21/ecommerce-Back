@@ -6,14 +6,14 @@ import { signJWT } from '../auth';
 import bcrypt from 'bcrypt';
 const saltRounds = 10;
 export const signupHandler:ExpressHandler<signUpRequest,withError<signUpResponse>> = async(req,res)=>{
-    const {email,username,firstName,lastName,password} = req.body;
+    const {email,firstName,lastName,password} = req.body;
 
-    if(!email || !username || !firstName || !lastName || !password){
+    if(!email || !firstName || !lastName || !password){
          res.status(400).send({error:"All fields required"});
          return;
     }
 
-    const existing = await DB.getUserByEmail(email) || await DB.getUserByUsername(username);
+    const existing = await DB.getUserByEmail(email);
 
     if(existing){
          res.status(400).send({error:"user already exists"});
@@ -23,13 +23,11 @@ export const signupHandler:ExpressHandler<signUpRequest,withError<signUpResponse
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
 
-
     const user:User={
         id: crypto.randomUUID(),
         email,
         firstName,
         lastName,
-        username,
         password: hashedPassword,
     }
     await DB.createUser(user);
@@ -48,7 +46,7 @@ export const signinHandler:ExpressHandler<signInRequest,withError<signInResponse
          return;
     }
 
-     const existing = await DB.getUserByEmail(login) || await DB.getUserByUsername(login);
+     const existing = await DB.getUserByEmail(login);
 
       if(!existing ||  !(await bcrypt.compare(password, existing.password))){
          res.sendStatus(400).send({error:"wrong credintals"});
@@ -61,7 +59,6 @@ export const signinHandler:ExpressHandler<signInRequest,withError<signInResponse
                firstName:existing.firstName,
                lastName:existing.lastName,
                id:existing.id,
-               username:existing.username
           },
           jwt
    

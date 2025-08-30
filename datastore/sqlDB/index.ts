@@ -1,5 +1,5 @@
 import { dataStore } from "..";
-import { User, Post, Comment, Like } from "../../types";
+import { User, Post, Comment, Like, Category, Product } from "../../types";
 
 import sqlite3 from 'sqlite3';
 import { Database,open as sqliteOpen } from 'sqlite';
@@ -27,14 +27,14 @@ export class sqliteDataStore implements dataStore{
 
 
     async createUser(user: User): Promise<void> {
-         await this.db.run('INSERT INTO USERS(email,firstName,lastName,password,username,id) VALUES(?,?,?,?,?,?)',user.email,user.firstName,user.lastName,user.password,user.username,user.id)
+         await this.db.run('INSERT INTO USERS(email,firstName,lastName,password,id) VALUES(?,?,?,?,?)',user.email,user.firstName,user.lastName,user.password,user.id)
     }
     async getUserByEmail(email: String): Promise<User | undefined> {
          return await this.db.get<User>("select * from users where email = ?",email);
     }
-    async getUserByUsername(username: String): Promise<User | undefined> {
-        return await this.db.get<User>("select * from users where username = ?",username);
-    }
+    // async getUserByUsername(username: String): Promise<User | undefined> {
+    //     return await this.db.get<User>("select * from users where username = ?",username);
+    // }
     async getUserById(id: String): Promise<User | undefined> {
         return await this.db.get<User>("select * from users where id = ?",id);
     }
@@ -62,5 +62,10 @@ export class sqliteDataStore implements dataStore{
     createLike(like: Like): Promise<void> {
         throw new Error("Method not implemented.");
     }
-    
+    listCategories(): Promise<Category[]> {
+       return this.db.all<Category[]>('SELECT * from categories')
+    }
+    getProductsByCatTitle(cat:string):Promise<Product[]> {
+        return this.db.all<Product[]>('select * from products where cat_prefix =?',cat);
+    }
 }

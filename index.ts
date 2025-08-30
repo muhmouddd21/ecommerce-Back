@@ -4,6 +4,8 @@ const cors = require("cors");
 import { initializeDB } from './datastore';
 import { signinHandler, signupHandler } from './controllers/userController';
 import { authMiddleware } from './Middlewares/authMiddleware';
+import { listCategories } from './controllers/categoryController';
+import { getProductsByCat } from './controllers/productController';
 
 (async()=>{
 
@@ -16,9 +18,11 @@ app.use(cors());
 app.use(express.json());
 
 
+
 app.post('/v1/signup',signupHandler)
 app.post('/v1/signin',signinHandler)
-
+app.get('/v1/category',listCategories);
+app.get('/v1/products',getProductsByCat);
 app.use(authMiddleware);
 
 app.get('/v1/posts',listposts)

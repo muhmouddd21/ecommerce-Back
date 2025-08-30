@@ -8,7 +8,6 @@ any>;
 export interface User{
     id:string,
     email:String,
-    username:String,
     firstName:String,
     lastName:String,
     password:string,
@@ -21,6 +20,21 @@ export interface Post{
     postedAt:number,
     userId:String
 }
+export interface Category{
+    id:number,
+    title:string,
+    prefix:string,
+    img:string
+}
+export interface Product{
+    id:number,
+    title:string,
+    price:string,
+    cat_prefix:string,
+    img:string,
+    max:number
+}
+
 export interface Like{
     postId:String,
     userId:String
