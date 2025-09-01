@@ -1,9 +1,9 @@
-import { getProductsByCat } from './../controllers/productController';
+import { getProducts } from './../controllers/productController';
 import express from 'express'
 
 const productsRoutes =express.Router()
 
-productsRoutes.get('/',getProductsByCat);
+productsRoutes.get('/',getProducts );
 
 
 export {productsRoutes}

@@ -68,6 +68,12 @@ export class sqliteDataStore implements dataStore{
     getProductsByCatTitle(cat:string):Promise<Product[]> {
         return this.db.all<Product[]>('select * from products where cat_prefix =?',cat);
     }
+    async getProductsByids(ids:number[]):Promise<Product[]>{
+        const placeholders = ids.map(() => "?").join(",");
+        const sql = `SELECT * FROM products WHERE id IN (${placeholders})`;
+        const rows = await this.db.all(sql, ids);
+        return rows;
+    }
     listWishlistOfUser(userId:number,productId?:number):Promise<number[]>{
         if(productId !== undefined){
             return this.db.all<number[]>('select productId from wishlist where userId = ? and productId = ? ',userId,productId);
