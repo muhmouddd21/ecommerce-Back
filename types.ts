@@ -49,4 +49,7 @@ export interface Comment{
 export interface jwtObject{
     userId:string
 }
+export type productId ={
+    id:number
+}
 export type withError<T> = T & {error: string};

@@ -5,8 +5,9 @@ import { likeDao } from './Dao/LikeDao';
 import { PostDao } from './Dao/PostDao';
 import { ProductDao } from './Dao/ProductDao';
 import { UserDeo } from './Dao/userDao';
+import { wishlistDao } from './Dao/WishlistDao';
 import { sqliteDataStore } from "./sqlDB/index";
-export interface dataStore extends UserDeo,CategoryDao,PostDao,CommentDao,ProductDao,likeDao{};
+export interface dataStore extends UserDeo,CategoryDao,PostDao,CommentDao,ProductDao,wishlistDao,likeDao{};
 
 
 export let DB :dataStore;
