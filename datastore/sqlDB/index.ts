@@ -32,9 +32,9 @@ export class sqliteDataStore implements dataStore{
     async getUserByEmail(email: String): Promise<User | undefined> {
          return await this.db.get<User>("select * from users where email = ?",email);
     }
-    // async getUserByUsername(username: String): Promise<User | undefined> {
-    //     return await this.db.get<User>("select * from users where username = ?",username);
-    // }
+    async checkAvailabilityOfEmail(email:string):Promise<string | undefined>{
+        return await this.db.get<string>("select email from users where email = ?",email);
+    }
     async getUserById(id: String): Promise<User | undefined> {
         return await this.db.get<User>("select * from users where id = ?",id);
     }

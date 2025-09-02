@@ -3,8 +3,6 @@ import express, { Request, Response,NextFunction,ErrorRequestHandler } from 'exp
 const cors = require("cors");
 import { initializeDB } from './datastore';
 import { authMiddleware } from './Middlewares/authMiddleware';
-import { listCategories } from './controllers/categoryController';
-import { getProductsByCat } from './controllers/productController';
 import  {userRouter}  from "./Routes/user.Routes";
 import { BaseError } from './services/Base.Error';
 import { categoryRouter } from './Routes/category.Routes';

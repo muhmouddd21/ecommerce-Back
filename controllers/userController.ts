@@ -4,6 +4,7 @@ import { DB } from "../datastore";
 import { ExpressHandler, jwtObject, User, withError } from "../types";
 import { signJWT } from '../auth';
 import bcrypt from 'bcrypt';
+import { asyncHandlerError } from '../utils/asyncHandlerError';
 const saltRounds = 10;
 export const signupHandler:ExpressHandler<signUpRequest,withError<signUpResponse>> = async(req,res)=>{
     const {email,firstName,lastName,password} = req.body;
@@ -66,3 +67,15 @@ export const signinHandler:ExpressHandler<signInRequest,withError<signInResponse
     return;
 
 }
+export const EmailAvailability =asyncHandlerError(async(req,res)=>{
+     const {email} = req.query;
+
+
+     let emailfound = await DB.checkAvailabilityOfEmail(email)
+     if(emailfound){
+          res.status(200).json(emailfound);
+     }else{
+          res.status(200).json([]);
+     }
+})
+
