@@ -23,9 +23,9 @@ app.use(express.json());
 app.use('/v1/users',userRouter);
 app.use('/v1/categories',categoryRouter);
 app.use('/v1/products',productsRoutes);
-app.use('/v1/wishlist',wishlistRoutes)
 
 app.use(authMiddleware);
+app.use('/v1/wishlist',wishlistRoutes)
 
 app.get('/v1/posts',listposts)
 app.post('/v1/posts',createPost)

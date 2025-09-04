@@ -74,17 +74,17 @@ export class sqliteDataStore implements dataStore{
         const rows = await this.db.all(sql, ids);
         return rows;
     }
-    listWishlistOfUser(userId:number,productId?:number):Promise<number[]>{
+    listWishlistOfUser(userId:string,productId?:number):Promise<number[]>{
         if(productId !== undefined){
             return this.db.all<number[]>('select productId from wishlist where userId = ? and productId = ? ',userId,productId);
         }
         return this.db.all<number[]>('select productId from wishlist where userId =?',userId);
     }
-    async AddToWishList(userId:number,productId:number):Promise<void>{
+    async AddToWishList(userId:string,productId:number):Promise<void>{
         await this.db.run('INSERT OR IGNORE INTO wishlist(userId,productId) VALUES(?,?)',userId,productId);
 
     }
-    async removeFromWishList(userId: number, productId: number): Promise<void> {
+    async removeFromWishList(userId: string, productId: number): Promise<void> {
         await this.db.run(
             'DELETE FROM wishlist WHERE userId = ? AND productId = ?',
             userId,

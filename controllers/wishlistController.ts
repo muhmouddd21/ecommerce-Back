@@ -6,10 +6,10 @@ import { asyncHandlerError } from "../utils/asyncHandlerError";
 
 
 export const listWishlistOfUser:ExpressHandler<{},number[]> = asyncHandlerError(async(req,res) =>{
-    const {userId,productId}=req.query;
+    const {productId}=req.query;
 
-
-    if(isNaN(userId)){
+    const userId=res.locals.user.id;
+    if(!userId){
         throw new BaseError(
             "Bad Request",
             400,
@@ -19,9 +19,9 @@ export const listWishlistOfUser:ExpressHandler<{},number[]> = asyncHandlerError(
     }
     let productIds:number[]=[];
     if(productId){
-        productIds =await DB.listWishlistOfUser(Number(userId),Number(productId))
+        productIds =await DB.listWishlistOfUser(userId,Number(productId))
     }else{
-         productIds = await DB.listWishlistOfUser(Number(userId));
+         productIds = await DB.listWishlistOfUser(userId);
 
     }
 
@@ -41,8 +41,10 @@ export const listWishlistOfUser:ExpressHandler<{},number[]> = asyncHandlerError(
 
 })
 export const AddToWishList:ExpressHandler<{userId:number,productId:number},{}> =asyncHandlerError(
+  
     async(req,res)=>{
-        const {userId,productId}=req.body
+        const userId=res.locals.user.id;
+        const {productId}=req.body
         if(userId && productId){
             await DB.AddToWishList(userId,productId)
         }
@@ -54,7 +56,7 @@ export const AddToWishList:ExpressHandler<{userId:number,productId:number},{}> =
 export const removeFromWishList = asyncHandlerError(
   async (req: Request<{ productId: string }>, res) => {
 
-    let userId=1 ; 
+    let userId=res.locals.user.id; 
     
     const productId = Number(req.params.productId);
     if (isNaN(productId)) {

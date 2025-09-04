@@ -17,6 +17,7 @@ export const authMiddleware:ExpressHandler<any,any> = async (req, res, next) => 
       res.status(401).json({ message: 'Invalid token' });
       return;
     }
+    res.locals.user = user;
     next();
   } catch (error: any) {
     res.status(403).json({ message: 'Invalid token' });
