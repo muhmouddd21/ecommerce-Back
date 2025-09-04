@@ -32,6 +32,20 @@ export class sqliteDataStore implements dataStore{
     async getUserByEmail(email: String): Promise<User | undefined> {
          return await this.db.get<User>("select * from users where email = ?",email);
     }
+    async getUserByRefreshToken(refreshToken:string):Promise<User | undefined>{
+        return await this.db.get( 
+            `select *
+            from refresh_tokens inner join users 
+            on refresh_tokens.user_id = users.id
+            where token = ?
+            
+            `,refreshToken);
+    }
+    async storeRefreshToken(refreshToken:string,userId:string):Promise <void>{
+        const expiresAt = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString();
+        await this.db.run('INSERT INTO refresh_tokens(token,user_id,expires_at) VALUES(?,?,?)',refreshToken,userId,expiresAt);
+
+    }
     async checkAvailabilityOfEmail(email:string):Promise<string | undefined>{
         return await this.db.get<string>("select email from users where email = ?",email);
     }
@@ -91,4 +105,5 @@ export class sqliteDataStore implements dataStore{
             productId
         );
     }
+    
 }

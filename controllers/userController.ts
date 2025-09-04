@@ -2,9 +2,14 @@ import * as crypto from 'crypto';
 import { signInRequest, signInResponse, signUpRequest, signUpResponse } from "../api";
 import { DB } from "../datastore";
 import { ExpressHandler, jwtObject, User, withError } from "../types";
-import { signJWT } from '../auth';
+import { signJWT, signRefreshToken, verifyJWT, verifyRefreshToken } from '../auth';
 import bcrypt from 'bcrypt';
 import { asyncHandlerError } from '../utils/asyncHandlerError';
+import jwt from 'jsonwebtoken'
+import dotenv from 'dotenv';
+import cookieParser from "cookie-parser";
+dotenv.config();
+
 const saltRounds = 10;
 export const signupHandler:ExpressHandler<signUpRequest,withError<signUpResponse>> = async(req,res)=>{
     const {email,firstName,lastName,password} = req.body;
@@ -54,6 +59,19 @@ export const signinHandler:ExpressHandler<signInRequest,withError<signInResponse
          return;
     }
     const jwt =signJWT({userId:existing.id});
+
+    const RefreshTokenJWT =signRefreshToken({userId:existing.id});
+
+ 
+     await DB.storeRefreshToken(RefreshTokenJWT,existing.id)
+
+
+     res.cookie('refreshToken', RefreshTokenJWT, {
+        httpOnly: true, // Prevents client-side JS from accessing the cookie
+        secure: false, // Only send over HTTPS
+        maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+    } );
+
      res.status(200).send({
           user:{  
                email:existing.email,
@@ -78,4 +96,29 @@ export const EmailAvailability =asyncHandlerError(async(req,res)=>{
           res.status(200).json([]);
      }
 })
+export const refresh = asyncHandlerError(async(req,res)=>{
+     const refreshToken = req.cookies.refreshToken;
 
+    if (!refreshToken) {
+        return res.status(401).json({ message: 'Refresh token not found' });
+    }
+
+    // Check if the refresh token is in our database of valid tokens
+    const refreshTokenInDb =DB.getUserByRefreshToken(refreshToken);
+
+    if (!refreshTokenInDb) {
+        return res.status(403).json({ message: 'Invalid refresh token' });
+    }
+
+    // 2. Verify the refresh token
+      const payload = verifyRefreshToken(refreshToken);
+      let user = await DB.getUserById(payload.userId)
+     if(!user){
+          return res.status(403).json({ message: 'Refresh token is not valid' });
+     }
+
+     const newJwt =signJWT({userId:payload.userId});
+
+
+        res.json({ accessToken: newJwt });
+});

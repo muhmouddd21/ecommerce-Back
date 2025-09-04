@@ -6,5 +6,6 @@ export interface UserDeo{
     getUserById(id:String):Promise<User|undefined>;
     getUserByEmail(email:String):Promise<User|undefined>;
     checkAvailabilityOfEmail(email:string):Promise<string|undefined>;
-    // getUserByUsername(username:String):Promise<User|undefined>;
+    getUserByRefreshToken(refreshToken:string):Promise<User|undefined>;
+    storeRefreshToken(refreshToken:string,userId:string):Promise<void>;
 }

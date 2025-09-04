@@ -1,3 +1,4 @@
+import cookieParser from "cookie-parser";
 import { createPost, listposts } from './controllers/postController';
 import express, { Request, Response,NextFunction,ErrorRequestHandler } from 'express';
 const cors = require("cors");
@@ -14,16 +15,23 @@ await initializeDB(); // server will not be running if that doesn't work
 console.log("initialized successfully");
 
 const app = express();
-app.use(cors());
+app.use(cors(
+  {
+  origin: "http://localhost:5173", // my React app
+  credentials: true,               // allow cookies
+}
+));
+
 
 
 app.use(express.json());
 
 
+app.use(cookieParser());
+
 app.use('/v1/users',userRouter);
 app.use('/v1/categories',categoryRouter);
 app.use('/v1/products',productsRoutes);
-
 app.use(authMiddleware);
 app.use('/v1/wishlist',wishlistRoutes)
 
