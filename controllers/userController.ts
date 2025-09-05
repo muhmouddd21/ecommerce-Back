@@ -118,7 +118,7 @@ export const refresh = asyncHandlerError(async(req,res)=>{
      const newJwt =signJWT({userId:payload.userId});
 
 
-        res.json({ accessToken: newJwt });
+        res.json({ accessToken: newJwt ,user:user});
 });
 
 export const logOutHandler =asyncHandlerError(async(req,res)=>{

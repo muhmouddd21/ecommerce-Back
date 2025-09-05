@@ -3,10 +3,10 @@ import { EmailAvailability, logOutHandler, refresh, signinHandler, signupHandler
 
 const userRouter = express.Router();
 
+userRouter.get('/',EmailAvailability)
 userRouter.post('/signup',signupHandler)
 userRouter.post('/signin',signinHandler)
 userRouter.post('/fresh',refresh)
 userRouter.post('/logout',logOutHandler)
-userRouter.get('/',EmailAvailability)
 
 export { userRouter };
