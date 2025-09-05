@@ -5,9 +5,7 @@ import { ExpressHandler, jwtObject, User, withError } from "../types";
 import { signJWT, signRefreshToken, verifyJWT, verifyRefreshToken } from '../auth';
 import bcrypt from 'bcrypt';
 import { asyncHandlerError } from '../utils/asyncHandlerError';
-import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv';
-import cookieParser from "cookie-parser";
 dotenv.config();
 
 const saltRounds = 10;
@@ -122,3 +120,14 @@ export const refresh = asyncHandlerError(async(req,res)=>{
 
         res.json({ accessToken: newJwt });
 });
+
+export const logOutHandler =asyncHandlerError(async(req,res)=>{
+     const refreshToken = req.cookies.refreshToken;
+
+         if (refreshToken) {
+               // 2. Invalidate the refresh token in our database
+               await DB.invalidateRefreshToken(refreshToken);
+          }
+          res.clearCookie('refreshToken');
+          res.status(200).send({ message: "Logged out successfully" });
+})

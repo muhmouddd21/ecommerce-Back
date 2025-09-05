@@ -8,4 +8,5 @@ export interface UserDeo{
     checkAvailabilityOfEmail(email:string):Promise<string|undefined>;
     getUserByRefreshToken(refreshToken:string):Promise<User|undefined>;
     storeRefreshToken(refreshToken:string,userId:string):Promise<void>;
+    invalidateRefreshToken(refreshToken:string):Promise<void>;
 }

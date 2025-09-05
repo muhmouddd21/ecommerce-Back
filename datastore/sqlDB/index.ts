@@ -46,6 +46,9 @@ export class sqliteDataStore implements dataStore{
         await this.db.run('INSERT INTO refresh_tokens(token,user_id,expires_at) VALUES(?,?,?)',refreshToken,userId,expiresAt);
 
     }
+    async invalidateRefreshToken(refreshToken:string):Promise <void>{
+        await this.db.run('DELETE from refresh_tokens where token =?',refreshToken);
+    }
     async checkAvailabilityOfEmail(email:string):Promise<string | undefined>{
         return await this.db.get<string>("select email from users where email = ?",email);
     }
