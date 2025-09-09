@@ -1,7 +1,7 @@
 // import { dataStore } from "..";
 // import { User, Post, Comment, Like } from "../../types";
 
-// export class InmemoryStore implements dataStore{
+export class InmemoryStore {
 
 //     private users:User[]=[];
 //     private posts:Post[]=[];
@@ -59,4 +59,4 @@
 //         return Promise.resolve();
 //     }
     
-// }
+}
