@@ -11,24 +11,30 @@ export class sqliteDataStore implements dataStore{
 
     private db!:Database<sqlite3.Database, sqlite3.Statement>;
 
-    public async openDb(){
+    public async openDb() {
+        // Use /tmp directory for SQLite in production (Railway)
+        // This is the only writable directory in Railway's environment
+        const dbFilename = process.env.NODE_ENV === 'production' 
+            ? '/tmp/codersquare-sqlite.db'
+            : path.join(__dirname, 'codersquare-sqlite.db');
 
         this.db = await sqliteOpen({
-                filename: path.join(__dirname,'codersquare-sqlite'),
-                driver: sqlite3.Database
-        })
+            filename: dbFilename,
+            driver: sqlite3.Database
+        });
 
-        this.db.run('PRAGMA foreign_keys= on;');
+        this.db.run('PRAGMA foreign_keys= ON;');
 
         const migrationsPath = path.join(__dirname, "migrations");
 
         // ✅ Check before running migrations
         if (fs.existsSync(migrationsPath) && fs.readdirSync(migrationsPath).length > 0) {
-        console.log("🚀 Running migrations...");
-        await this.db.migrate({ migrationsPath });
+            console.log("🚀 Running migrations...");
+            await this.db.migrate({ migrationsPath });
         } else {
-        console.warn("⚠️ No migrations found, skipping db.migrate()");
+            console.warn("⚠️ No migrations found, skipping db.migrate()");
         }
+        
         return this;
     }
 
