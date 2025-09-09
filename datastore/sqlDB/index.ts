@@ -1,4 +1,5 @@
 import { dataStore } from "..";
+import fs from "fs";
 import { User, Post, Comment, Like, Category, Product, productId } from "../../types";
 
 import sqlite3 from 'sqlite3';
@@ -18,10 +19,16 @@ export class sqliteDataStore implements dataStore{
         })
 
         this.db.run('PRAGMA foreign_keys= on;');
-        await this.db.migrate({
-            migrationsPath:path.join(__dirname,'migrations'),
+
+        const migrationsPath = path.join(__dirname, "migrations");
+
+        // ✅ Check before running migrations
+        if (fs.existsSync(migrationsPath) && fs.readdirSync(migrationsPath).length > 0) {
+        console.log("🚀 Running migrations...");
+        await this.db.migrate({ migrationsPath });
+        } else {
+        console.warn("⚠️ No migrations found, skipping db.migrate()");
         }
-        )
         return this;
     }
 
