@@ -11,32 +11,36 @@ export class sqliteDataStore implements dataStore{
 
     private db!:Database<sqlite3.Database, sqlite3.Statement>;
 
-    public async openDb() {
-        // Use /tmp directory for SQLite in production (Railway)
-        // This is the only writable directory in Railway's environment
-        const dbFilename = process.env.NODE_ENV === 'production' 
-            ? '/tmp/codersquare-sqlite.db'
-            : path.join(__dirname, 'codersquare-sqlite.db');
+  public async openDb() {
+    // Use /tmp directory for SQLite in production (Railway)
+    // This is the only writable directory in Railway's environment
+    const persistentDbPath = '/app/data/codersquare-sqlite.db';
 
-        this.db = await sqliteOpen({
-            filename: dbFilename,
-            driver: sqlite3.Database
-        });
+    // Use the persistent path for production and a local path for development
+    const dbFilename = process.env.NODE_ENV === 'production' 
+        ? persistentDbPath // ✅ CORRECT: Use the persistent volume path
+        : path.join(__dirname, 'codersquare-sqlite.db');
 
-        this.db.run('PRAGMA foreign_keys= ON;');
+    console.log(`[DB] Using database file at: ${dbFilename}`);
+    this.db = await sqliteOpen({
+        filename: dbFilename,
+        driver: sqlite3.Database
+    });
 
-        const migrationsPath = path.join(__dirname, "migrations");
+    this.db.run('PRAGMA foreign_keys= ON;');
 
-        // ✅ Check before running migrations
-        if (fs.existsSync(migrationsPath) && fs.readdirSync(migrationsPath).length > 0) {
-            console.log("🚀 Running migrations...");
-            await this.db.migrate({ migrationsPath });
-        } else {
-            console.warn("⚠️ No migrations found, skipping db.migrate()");
-        }
-        
-        return this;
+    const migrationsPath = path.join(__dirname, "migrations");
+
+    // ✅ Check before running migrations
+    if (fs.existsSync(migrationsPath) && fs.readdirSync(migrationsPath).length > 0) {
+        console.log("🚀 Running migrations...");
+        await this.db.migrate({ migrationsPath });
+    } else {
+        console.warn("⚠️ No migrations found, skipping db.migrate()");
     }
+    
+    return this;
+}
 
 
     async createUser(user: User): Promise<void> {
