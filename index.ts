@@ -29,9 +29,14 @@ app.use(express.json());
 
 app.use(cookieParser());
 
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'OK' });
+});
+
 app.use('/v1/users',userRouter);
 app.use('/v1/categories',categoryRouter);
 app.use('/v1/products',productsRoutes);
+
 app.use(authMiddleware);
 app.use('/v1/wishlist',wishlistRoutes)
 
@@ -71,34 +76,6 @@ app.listen(PORT, "0.0.0.0", () => {
 
 
 })()
-// import { createClient } from 'redis';
 
-// const client = createClient({
-//   socket: {
-//     host: 'localhost',
-//     port: 6379,
-//   },
-// });
-
-// client.on('error', (err) => console.error('Redis Client Error', err));
-
-// async function testRedisConnection(){
-//     try {
-//         await client.connect();
-//         await client.mSet(["name","mahmoud","age","10"]);
-//         const values = await client.mGet(["name","age"]); 
-//         console.log("connected to redis");
-//         console.log(values);
-        
-//       // list  // Lpush,Rpush,Lrange,Lpop,Rpop
-        
-//     } catch (error) {   
-//         console.error(error);
-        
-//     }finally{
-//         await client.quit()
-//     }
-// }
-// testRedisConnection();
 
 
