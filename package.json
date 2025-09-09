@@ -5,7 +5,7 @@
   "scripts": {
     "build": "tsc && npm run copy:migrations",
     "copy:migrations": "mkdir -p dist/datastore/sqlDB && cp -R datastore/sqlDB/migrations dist/datastore/sqlDB/",
-      "verify:migrations": "node -e \"const fs = require('fs'); console.log('Migration files:', fs.readdirSync('dist/datastore/sqlDB/migrations', {withFileTypes: true}).map(d => d.name));\"",
+    "verify:migrations": "node -e \"const fs = require('fs'); console.log('Migration files:', fs.readdirSync('dist/datastore/sqlDB/migrations', {withFileTypes: true}).map(d => d.name));\"",
     "start": "node dist/index.js",
     "dev": "nodemon --exec ts-node index.ts"
   },
@@ -28,6 +28,7 @@
     "@trivago/prettier-plugin-sort-imports": "^5.2.2",
     "@types/bcrypt": "^5.0.2",
     "@types/cookie-parser": "^1.4.9",
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^24.0.7",
