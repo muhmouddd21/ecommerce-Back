@@ -3,7 +3,6 @@ CREATE TABLE users (
   firstName varchar not null,
   lastName varchar not null,
    email varchar not null unique,
-  username varchar not null unique,
    password varchar not null
 );
 create TABLE posts(
