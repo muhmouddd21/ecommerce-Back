@@ -17,7 +17,7 @@ console.log("initialized successfully");
 const app = express();
 app.use(cors(
   {
-  origin: "http://localhost:5173", // my React app
+  origin: true, // my React app
   credentials: true,               // allow cookies
 }
 ));
@@ -63,7 +63,13 @@ const errorHandler: ErrorRequestHandler = (
 app.use(errorHandler);
 
 
-app.listen(3000)
+const PORT = parseInt(process.env.PORT ?? "3000", 10);
+
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`🚀 Server is running on port ${PORT}`);
+});
+
+
 })()
 // import { createClient } from 'redis';
 
